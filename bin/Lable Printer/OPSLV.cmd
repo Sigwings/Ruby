@@ -1,0 +1,1 @@
+ocra "Label Printer.rb" --windows C:\Ruby193\lib\tcltk\ --no-autoload --add-all-core --output "Label Printer.exe" --chdir-first --no-lzma --innosetup "OPSLV.iss"
