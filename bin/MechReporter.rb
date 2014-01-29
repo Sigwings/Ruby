@@ -242,7 +242,7 @@ class MechReporter
   
   def print_label ( file_name, copies=1, ptr='default' )
     internal_puts 'Printing Labels...'
-    if ptr = 'default'
+    if ptr == 'default'
       cmd = %Q|"#{acrobat}" /n /s /h /t "#{ file_name.gsub('/', '\\') }" "#{ printer }"|.gsub('\\','\\\\')
     else
       cmd = %Q|"#{acrobat}" /n /s /h /t "#{ file_name.gsub('/', '\\') }" "#{ ptr }"|.gsub('\\','\\\\')
