@@ -1,4 +1,5 @@
 require 'tk' # GUI
+require 'tkextlib/tile' #Advanced GUI
 require_relative '../MechReporter' # Reporter and link to RubyExcel
 require_relative '../Directory' # Reporter and link to RubyExcel
 

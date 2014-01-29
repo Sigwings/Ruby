@@ -110,7 +110,8 @@ class LabelGui
       end.flatten.compact
       
       # Get the labels and open the print dialog
-      if $dp == false ? m.print_prompt( m.save_labels( keys, $rad ) ) : m.print_label( m.save_labels( keys, $rad ) ); end
+#      if $dp == false ? m.print_prompt( m.save_labels( keys, $rad ) ) : m.print_label( m.save_labels( keys, $rad ) ); end
+      m.print_label( m.save_labels( keys, $rad ), 1, $printer )
       
       sleep 2
       

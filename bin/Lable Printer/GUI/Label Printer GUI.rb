@@ -7,6 +7,7 @@ class LabelGui
     $rad = TkVariable.new(1)
     $cb = TkVariable.new(false)
     $dp = TkVariable.new(false)
+    $printer = TkVariable.new('')
 
 #    @text = TkVariable.new
  
@@ -61,16 +62,25 @@ class LabelGui
 		).grid row: 1, column: 4, columnspan: 2, sticky: 'nsew'
 
 		@return_only = TkCheckButton.new(top,
-			text: 'Return Lables Only',
+			text: 'Return Labels Only',
       variable: $cb
 #      height(2)
 		).grid row: 2, column: 0, columnspan: 2, sticky: 'nsew'
 
+    @printer = Tk::Tile::TCombobox.new(top,
+      textvariable: $printer,
+      state: 'readonly',
+      width: 24,
+      values: get_printers # Printer list routine
+    ).grid row: 2, column: 4, columnspan: 2, sticky: 'nsw'
+
+=begin
 		@default_printer = TkCheckButton.new(top,
 			text: 'Print to Default Printer',
       variable: $dp
 #      height(2)
 		).grid row: 2, column: 4, columnspan: 2, sticky: 'nsew'
+=end
 
     @textbox = TkText.new(top,
       width: 18,
