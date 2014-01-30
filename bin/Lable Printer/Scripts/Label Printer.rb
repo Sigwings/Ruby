@@ -1,35 +1,35 @@
 include RegistryTools
 
 class LabelGui
+
   include DateTools
 
   def gui_puts( str, internal=true )
-    @msg = str if internal
-    str = @msg + ' - ' + str unless internal
+  
+    self.msg = str if internal
+    str = msg + ' - ' + str unless internal
 
-    if str.length > @lbllength
+    if str.length > lbllength
       lbllth = (str.length) / 3  
-      @lbllength = str.length
-      if (lbllth.round * 3) < @lbllength
-        @lbllength = lbllth.round * 3
-      end
-#      @lbl.configure('width'=>@lbllength)
-      @lbl2.configure('width'=>@lbllength)
-      @butm.configure('width'=>lbllth.round - 1)
-      @butl.configure('width'=>lbllth.round - 1)
-      @butr.configure('width'=>lbllth.round - 1)
+      self.lbllength = str.length
+      self.lbllength = lbllth.round * 3 if (lbllth.round * 3) < lbllength
+
+      status_label.configure('width'=>lbllength)
+      log_button.configure('width'=>lbllth.round - 1)
+      print_button.configure('width'=>lbllth.round - 1)
+      close_button.configure('width'=>lbllth.round - 1)
     end
 
     puts str
 
-    @lbl2.configure('text'=>str)
+    status_label.configure('text'=>str)
     Tk.update
     
 	end
  
 	# Let there be a printing of labels!
   def go_go_go
- 
+  
     Tk.update
  
     # Catch errors so the GUI doesn't just mysteriously disappear
@@ -45,7 +45,7 @@ class LabelGui
       
       q = RDTQuery.new 'http://centrex.redetrack.com/redetrack/bin/report.php?report_locations_list=T&select_div_last_shown=&report_limit_to_top_locations=N&action=ordtrack&num=OR0000857779&num_raisedtrack=&status=999&pod=A&status_code=&itemtype=&location=&value_location=&tf=current&days=365&befaft=b&dd=09&mon=08&yyyy=2013&fdays=1&fbefaft=a&fdd=09&fmon=08&fyyyy=2013&ardd=09&armon=08&aryyyy=2012'
       q.set_dates( today )
-      q[ 'status' ] = '' unless $cb # == true
+      q[ 'status' ] = '' if return_labels == 0
       
       r = RDTQuery.new 'http://centrex.redetrack.com/redetrack/bin/report.php?report_locations_list=T&select_div_last_shown=&report_limit_to_top_locations=N&action=custordtrack&num=INC000000814606&num_raisedtrack=&status=&pod=A&status_code=&itemtype=&location=&value_location=&tf=current&days=365&befaft=b&dd=23&mon=08&yyyy=2013&fdays=1&fbefaft=a&fdd=23&fmon=08&fyyyy=2013&ardd=23&armon=08&aryyyy=2012'
       r.set_dates( today )
@@ -110,8 +110,7 @@ class LabelGui
       end.flatten.compact
       
       # Get the labels and open the print dialog
-#      if $dp == false ? m.print_prompt( m.save_labels( keys, $rad ) ) : m.print_label( m.save_labels( keys, $rad ) ); end
-      m.print_label( m.save_labels( keys, $rad ), 1, $printer )
+      m.print_label( m.save_labels( keys, label_type ), 1, selected_printer )
       
       sleep 2
       
@@ -124,20 +123,31 @@ class LabelGui
       gui_puts 'Task Complete.'
     end
     
-    # Quit
-    #Gtk.main_quit
   end
 
   # Extract the contents of the Textbox into an array
   def get_key
-    @textbox.get(1.0, 'end').split(/\s+/).reject( &:empty? )
+  
+    textbox.get(1.0, 'end').split(/\s+/).reject( &:empty? )
+    
   end
   # Update the label we're using to communicate with the user
 
   # Open log file in Notepad
-  def open_log (filename)
+  def open_log (filename = logger.filename)
+
     File.exist?( filename ) || File.write( filename, '' )
     Thread.new { system "notepad #{ filename }" }
+    
+  end
+ 
+  def exitprog
+  
+    set_regkey_val( 'LblPtr Type', label_type )
+    set_regkey_val( 'LblPtr Printer', selected_printer )
+    set_regkey_val( 'LblPtr Return', return_labels )
+    exit
+    
   end
   
 end

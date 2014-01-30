@@ -1,117 +1,115 @@
 class LabelGui
 
+  attr_accessor :label_type, :selected_printer, :return_labels, :textbox, :msg, :lbllength, :status_label, :log_button, :print_button, :close_button, :logger
+
   # Build the GUI
   def initialize
 
-	@lbllength = 50
-    $rad = TkVariable.new(1)
-    $cb = TkVariable.new(false)
-    $dp = TkVariable.new(false)
-    $printer = TkVariable.new('')
+    self.logger = RubyLogger.new.sync
+    self.lbllength = 50
+    self.label_type = TkVariable.new(1)
+    self.return_labels = TkVariable.new(false)
+    self.selected_printer = TkVariable.new('')
 
-#    @text = TkVariable.new
- 
 		root = TkRoot.new(
-			title: $title,
+			title: 'Label Printer',
       background: 'SystemWindow'
     )
    
 		top = TkFrame.new(root).pack('fill'=>'both', 'expand'=>true)
     
-    @butl=TkButton.new(top,
+    self.print_button = TkButton.new(top,
       text: 'Print',
       width: 23,
       height: 2,
       command: proc {go_go_go}
 		).grid row: 0, column: 0, columnspan: 2, sticky: 'nsew'
     
-    @butm=TkButton.new(top,
+    self.log_button = TkButton.new(top,
       text: 'Open Report',
-#      state: 'disabled',
       width: 23,
       height: 2,
-      command: proc {open_log $logfile}
+      command: proc {open_log}
 		).grid row: 0, column: 2, columnspan: 2, sticky: 'nsew'
 
-    @butr=TkButton.new(top,
+    self.close_button = TkButton.new(top,
       text: 'Close', 
       width: 23,
       height: 2,
-      command: proc{ exit }
+      command: proc{ exitprog }
 		).grid row: 0, column: 4, columnspan: 2, sticky: 'nsew'
 
-		@radl = TkRadiobutton.new(top,
+		TkRadiobutton.new(top,
       text: 'Centrex Label',
-			variable: $rad,
+			variable: label_type,
 			value: 1
-#      height(2)
 		).grid row: 1, column: 0, columnspan: 2, sticky: 'nsew'
 
-   @radm = TkRadiobutton.new(top,
+    TkRadiobutton.new(top,
       text: 'Stock Label',
-			variable: $rad,
+			variable: label_type,
 			value: 2
-#      height(2)
 		).grid row: 1, column: 2, columnspan: 2, sticky: 'nsew'
 
-   @radr = TkRadiobutton.new(top,
+    TkRadiobutton.new(top,
       text: 'Repair Label',
-			variable: $rad,
+			variable: label_type,
 			value: 3
-#      height(2)
 		).grid row: 1, column: 4, columnspan: 2, sticky: 'nsew'
 
-		@return_only = TkCheckButton.new(top,
-			text: 'Return Labels Only',
-      variable: $cb
-#      height(2)
-		).grid row: 2, column: 0, columnspan: 2, sticky: 'nsew'
+    TkLabel.new(top,
+      text: 'Printer',
+      height: 1
+		).grid row: 2, column: 4, columnspan: 2, sticky: 'ew'
 
-    @printer = Tk::Tile::TCombobox.new(top,
-      textvariable: $printer,
+		TkCheckButton.new(top,
+			text: 'Return Labels Only',
+      variable: return_labels
+		).grid row: 3, column: 0, columnspan: 2, sticky: 'nsew'
+
+    Tk::Tile::TCombobox.new(top,
+      textvariable: selected_printer,
       state: 'readonly',
       width: 24,
       values: get_printers # Printer list routine
-    ).grid row: 2, column: 4, columnspan: 2, sticky: 'nsw'
+    ).grid row: 3, column: 4, columnspan: 2, sticky: 'nsw'
 
-=begin
-		@default_printer = TkCheckButton.new(top,
-			text: 'Print to Default Printer',
-      variable: $dp
-#      height(2)
-		).grid row: 2, column: 4, columnspan: 2, sticky: 'nsew'
-=end
-
-    @textbox = TkText.new(top,
+    self.textbox = TkText.new(top,
       width: 18,
       height: 10,
       borderwidth: 1
-		).grid row: 3, column: 2, columnspan: 2, sticky: 'nsew'
+		).grid row: 4, column: 2, columnspan: 2, sticky: 'nsew'
 
-#    @textbox.insert 'end', "OR0001359592\nOR0001311282"
+    bar = TkScrollbar.new(top).grid row: 4, column: 3, sticky: 'nse'
 
-    bar = TkScrollbar.new(top).grid row: 3, column: 3, sticky: 'nse'
+    textbox.yscrollcommand(proc { |*args| bar.set(*args)})
+    bar.command(proc { |*args| textbox.yview(*args)}) 
 
-    @textbox.yscrollcommand(proc { |*args| bar.set(*args)})
-    bar.command(proc { |*args| @textbox.yview(*args)}) 
-
-    @lbl = TkLabel.new(top,
+    TkLabel.new(top,
       text: '',
       height: 1
-		).grid row: 4, column: 0, columnspan: 6, sticky: 'ew'
+		).grid row: 5, column: 0, columnspan: 6, sticky: 'ew'
 
-    @lbl2 = TkLabel.new(top,
+    self.status_label = TkLabel.new(top,
       text: 'Waiting for User Input...',
       borderwidth: 1,
       height: 2,
       relief: 'sunken' 
-		).grid row: 5, column: 0, columnspan: 6, sticky: 'ew'
+		).grid row: 6, column: 0, columnspan: 6, sticky: 'ew'
  
     top.pack('fill'=>'both', 'side' =>'top')
+    
   end
   
-   # Display the GUI
+  # Display the GUI
   def run
+  
+    label_type.value = ( get_regkey_val( 'LblPtr Type' ) || 1 ).to_i
+    selected_printer.value = get_regkey_val( 'LblPtr Printer' ) || get_default_printer
+    return_labels.value = ( get_regkey_val( 'LblPtr Return' ) || 0 ).to_i
+  
     Tk.mainloop
+    
   end
+  
 end

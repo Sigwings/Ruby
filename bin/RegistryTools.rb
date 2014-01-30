@@ -28,15 +28,11 @@ module RegistryTools
   end
 
   def get_printers
-
-    #printer = []
-    #printers =
-    Win32::Registry::HKEY_CURRENT_USER.open('Software\Microsoft\Windows NT\CurrentVersion\Devices').map { |name|name }# do |reg|
-#      reg.each{|name| printer << name}
-#    end
-#    printer
-
+    Win32::Registry::HKEY_CURRENT_USER.open('Software\Microsoft\Windows NT\CurrentVersion\Devices').map { |name|name }
   end
-
+  
+  def get_default_printer
+    Win32::Registry::HKEY_CURRENT_USER.open('Software\Microsoft\Windows NT\CurrentVersion\Windows')['Device'].split(',').first
+  end
 
 end
