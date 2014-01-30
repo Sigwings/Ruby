@@ -1,1 +1,0 @@
-ocra "MC9090 RMA GUI.rbw" --windows C:\Ruby193\lib\tcltk\ --no-autoload --add-all-core

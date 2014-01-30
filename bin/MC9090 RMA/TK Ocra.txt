@@ -1,1 +1,0 @@
-ocra rubyfile.rb --windows C:\Ruby193\lib\tcltk\ --no-autoload --add-all-core
