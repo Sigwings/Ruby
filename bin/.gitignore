@@ -217,6 +217,7 @@ pip-log.txt
 #Other
 *.xls*
 Old/
+Output/
 Passwords.rb
 Archive/
 *opslv*
