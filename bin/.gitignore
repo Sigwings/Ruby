@@ -224,5 +224,6 @@ Archive/
 *.exe
 *.iss
 *.txt
+*.cmd
 PO Status Report.rb
 test.rb
