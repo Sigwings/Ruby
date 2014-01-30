@@ -240,13 +240,9 @@ class MechReporter
   # @param [Fixnum] copies the number of copies to print
   #
   
-  def print_label ( file_name, copies=1, ptr='default' )
+  def print_label ( file_name, copies=1, ptr=printer )
     internal_puts 'Printing Labels...'
-    if ptr == 'default'
-      cmd = %Q|"#{acrobat}" /n /s /h /t "#{ file_name.gsub('/', '\\') }" "#{ printer }"|.gsub('\\','\\\\')
-    else
-      cmd = %Q|"#{acrobat}" /n /s /h /t "#{ file_name.gsub('/', '\\') }" "#{ ptr }"|.gsub('\\','\\\\')
-    end
+    cmd = %Q|"#{acrobat}" /n /s /h /t "#{ file_name.gsub('/', '\\') }" "#{ ptr }"|.gsub('\\','\\\\')
     copies.times do
       sleep 0.3
       Thread.new { system cmd }
