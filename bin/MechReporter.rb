@@ -229,18 +229,18 @@ class MechReporter
   # @return [String] the name of the default printer
   #
   
-  def printer
-    Win32::Registry::HKEY_CURRENT_USER.open('Software\Microsoft\Windows NT\CurrentVersion\Windows')['Device'].split(',').first
-  end
+ # def printer
+ #   Win32::Registry::HKEY_CURRENT_USER.open('Software\Microsoft\Windows NT\CurrentVersion\Windows')['Device'].split(',').first
+ # end
   
   #
-  # Print a pdf file to the default printer
+  # Print a pdf file to the Selected printer
   #
   # @param [String] file_name the full path of the pdf file
   # @param [Fixnum] copies the number of copies to print
   #
   
-  def print_label ( file_name, copies=1, ptr=printer )
+  def print_label ( file_name, copies=1, ptr=get_default_printer )
     internal_puts 'Printing Labels...'
     cmd = %Q|"#{acrobat}" /n /s /h /t "#{ file_name.gsub('/', '\\') }" "#{ ptr }"|.gsub('\\','\\\\')
     copies.times do
