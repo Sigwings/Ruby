@@ -21,4 +21,10 @@ module Directory
 		filename
 	end
   
- end
+	def get_current_directory
+	
+		dir = Dir.pwd
+		
+	end
+
+end
