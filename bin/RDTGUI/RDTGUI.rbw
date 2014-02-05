@@ -63,7 +63,6 @@ require_relative 'GUI/RDTGUI' #RDT GUI Class
 #addressable version must be 2.2.8 or lower and libwebsocket 0.1.3 due to compatibility issues with ocra and webdriver
 #win32-process must be 0.6.6 for compatibility with windows XP
 
-
 =begin
 #Ocra command for tk:
 #ocra "RDTGUI.rbw" C:\Ruby193\lib\tcltk\ --no-autoload --add-all-core

@@ -1,4 +1,4 @@
-require_relative 'lib/defs'
+require_relative '../Scripts/defs'
 
 class RDTGUI #Let's give this program some class
 
