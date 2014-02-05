@@ -7,7 +7,7 @@ class MC9090RMA_Gui
     @lbllength = 70
   
     root = TkRoot.new(
-      title: $title,
+      title: 'Waitrose MC9090/MC9091 GUI',
       background: 'SystemWindow'
     )
     
