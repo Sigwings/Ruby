@@ -304,6 +304,10 @@ class MechReporter
     login
     internal_puts 'running report...'
     
+    # Convert the report to only return a csv
+    uri = RDTQuery.new( uri )
+    uri[ 'givecsvonly' ] = 'Yes'
+    
     # Get the report page from our list of arguments
     page = agent.get( uri.to_s )
     
@@ -419,7 +423,7 @@ class MechReporter
   #
   # Run a Management Report with the given options
   #
-=begin  
+
   def run_mr( by: 'Months', length: 1, type: 'Customer Demand', split_by: 'Account', then_by: nil, select_by: nil, select_val: nil )
     
     login
@@ -458,7 +462,7 @@ class MechReporter
     RubyExcel::Workbook.new.load( CSV.parse( agent.get('http://' + domain + filename ).content ) )
 
   end
-=end  
+
   #
   # Break a report into smaller time-frames in order to avoid timeouts
   #
@@ -558,7 +562,7 @@ class MechReporter
   # @param [String, Array<String>] to_ary the "To" email address(es)
   # @param [String] body_var the email body
   #
-=begin 
+
   def send_email( attachments=[], subject_var='Automated Email', to_ary=Passwords::MyName, body_var='Automated email', bcc_ary = [] )
 
     # Standardise email addresses into an array in case a string was passed through
@@ -596,7 +600,7 @@ class MechReporter
     end
 
   end
-=end  
+
   #
   # Custom wait method
   #
