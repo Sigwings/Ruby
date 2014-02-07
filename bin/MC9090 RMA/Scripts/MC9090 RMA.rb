@@ -38,6 +38,8 @@ class MC9090RMA_Gui
     return false if (@textbox.get(1.0, 'end').chomp.strip == '')
     
     cntx_rma_array = @textbox.get(1.0, 'end').split(/\n/).reject{ |el| el==''}.map { |line| line.split(/\s+/) }
+    #Uppercase the array
+    cntx_rma_array.map!(&:upcase)
 
     #check all entries have valid CNTX and RMA
     unless cntx_rma_array.all? { |array| Array === array && array.length == 2 && array[1] =~ /\A\d{7}\z/ && MechReporter.cntxify( array[0] ) rescue false }

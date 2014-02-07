@@ -38,8 +38,8 @@ class Engineering < RDT
   end
   
   def update_job( cntx, args )
-    cntx = MechReporter.cntxify cntx
-    args = { supervisor: false, status: nil, reason: nil, sla: nil, ber: nil, part: nil, notes: nil }.merge( args )
+    cntx = MechReporter.cntxify cntx.upcase
+    args = { supervisor: false, status: nil, reason: nil, sla: nil, ber: nil, part: nil, qty: nil, notes: nil }.merge( args )
   
     start( true, false, true ) if driver.nil?
     
